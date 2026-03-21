@@ -3,59 +3,90 @@ import Colors from "../constants/Colors";
 
 export const loginStyles = StyleSheet.create({
 	title: {
+		marginTop: 132,
 		textAlign: "center",
-		fontSize: 42,
-		fontWeight: "bold",
+		fontSize: 36,
+		fontFamily: "Inter-SemiBold",
 		color: Colors.black,
-		marginBottom: 5,
 	},
 	subtitle: {
 		textAlign: "center",
-		fontSize: 16,
+		fontSize: 14,
+		fontFamily: "Inter-Regular",
 		color: Colors.black,
-		marginBottom: 150,
 		opacity: 0.9,
 	},
+
+	mainPanel: {
+		paddingBottom: 97,
+	},
+
 	inputContainer: {
 		width: "100%",
+		marginTop: 24,
 		marginBottom: 20,
 	},
 	dividerContainer: {
 		flexDirection: "row",
 		alignItems: "center",
-		marginVertical: 20,
+		marginVertical: 24,
 		width: "100%",
 	},
 	line: {
 		flex: 1,
 		height: 1,
-		backgroundColor: "#E0E0E0",
+		backgroundColor: "#E6E6E6",
 	},
 	dividerText: {
 		marginHorizontal: 10,
-		color: "#999",
+		color: Colors.gray,
+		fontFamily: "Inter-Regular",
 		fontSize: 14,
 	},
 	registerButton: {
-		backgroundColor: "#e6e6e6",
+		height: 40,
+		backgroundColor: "#EEEEEE",
 		flexDirection: "row",
 		alignItems: "center",
 		justifyContent: "center",
-		gap: 5,
-		padding: 15,
+		gap: 8,
 		borderRadius: 12,
-		marginBottom: 15,
+		marginBottom: 8,
 		width: "100%",
 	},
 	withShadow: {
 		shadowColor: "#000",
-		shadowOffset: { width: 0, height: 2 },
-		shadowOpacity: 0.08,
+		shadowOffset: {
+			width: 0,
+			height: 4,
+		},
+		shadowOpacity: 0.25,
 		shadowRadius: 4,
-		elevation: 3,
+		elevation: 8,
 	},
 	registerText: {
 		textAlign: "center",
-		color: Colors.darkGray,
+		fontFamily: "Inter-BolderRegular",
+		fontSize: 14,
+		color: Colors.black,
+	},
+
+	icon: {
+		width: 20,
+		height: 20,
+	},
+	footerContainer: {
+		marginTop: 24,
+		paddingHorizontal: 10,
+	},
+	footerText: {
+		fontSize: 12,
+		textAlign: "center",
+		color: Colors.gray,
+		fontFamily: "Inter-Regular",
+	},
+	linkText: {
+		color: "#000",
+		fontFamily: "Inter-Regular",
 	},
 });
