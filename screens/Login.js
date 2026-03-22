@@ -12,7 +12,6 @@ import {
 	Image,
 } from "react-native";
 
-import { FontAwesome5 } from "@expo/vector-icons";
 import { globalStyles } from "../styles/GlobalStyles";
 import { loginStyles } from "../styles/LoginStyles";
 
@@ -121,18 +120,18 @@ export default function LoginScreen({ navigation }) {
 										Zarejestruj jako schronisko
 									</Text>
 								</TouchableOpacity>
-								<View style={loginStyles.footerContainer}>
-									<Text style={loginStyles.footerText}>
+								<View style={globalStyles.footerContainer}>
+									<Text style={globalStyles.footerText}>
 										Kontynuując, akceptujesz nasz{" "}
 										<Text
-											style={loginStyles.linkText}
+											style={globalStyles.linkText}
 											onPress={() => console.log("Otwórz Regulamin")}
 										>
 											Regulamin
 										</Text>{" "}
 										oraz{" "}
 										<Text
-											style={loginStyles.linkText}
+											style={globalStyles.linkText}
 											onPress={() => console.log("Otwórz Politykę")}
 										>
 											Politykę Prywatności

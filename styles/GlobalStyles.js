@@ -18,7 +18,7 @@ export const globalStyles = StyleSheet.create({
 		fontFamily: "Inter-SemiBold",
 	},
 	subtitle: {
-		marginBottom: 15,
+		marginBottom: 24,
 		textAlign: "center",
 		fontSize: 14,
 		fontFamily: "Inter-Regular",
@@ -34,6 +34,7 @@ export const globalStyles = StyleSheet.create({
 		color: Colors.gray,
 		borderWidth: 1,
 		borderColor: "#E0E0E0",
+		backgroundColor: Colors.white,
 	},
 	mainButton: {
 		height: 40,
@@ -46,5 +47,19 @@ export const globalStyles = StyleSheet.create({
 		color: Colors.white,
 		fontFamily: "Inter-BolderRegular",
 		fontSize: 14,
+	},
+	footerContainer: {
+		marginTop: 24,
+		paddingHorizontal: 10,
+	},
+	footerText: {
+		fontSize: 12,
+		textAlign: "center",
+		color: Colors.gray,
+		fontFamily: "Inter-Regular",
+	},
+	linkText: {
+		color: "#000",
+		fontFamily: "Inter-Regular",
 	},
 });

@@ -75,18 +75,4 @@ export const loginStyles = StyleSheet.create({
 		width: 20,
 		height: 20,
 	},
-	footerContainer: {
-		marginTop: 24,
-		paddingHorizontal: 10,
-	},
-	footerText: {
-		fontSize: 12,
-		textAlign: "center",
-		color: Colors.gray,
-		fontFamily: "Inter-Regular",
-	},
-	linkText: {
-		color: "#000",
-		fontFamily: "Inter-Regular",
-	},
 });

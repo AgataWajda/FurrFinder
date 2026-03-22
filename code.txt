@@ -1,0 +1,370 @@
+App.js
+
+import { useCallback } from "react";
+import { View } from "react-native"; // Dodaliśmy View
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import * as SplashScreen from "expo-splash-screen";
+import {
+	useFonts,
+	Inter_400Regular,
+	Inter_500Regular,
+	Inter_600SemiBold,
+} from "@expo-google-fonts/inter";
+import Login from "./screens/Login";
+import RegisterScreen from "./screens/Register";
+
+const Stack = createNativeStackNavigator();
+
+SplashScreen.preventAutoHideAsync();
+
+export default function App() {
+	const [fontsLoaded, fontError] = useFonts({
+		"Inter-Regular": Inter_400Regular,
+		"Inter-BolderRegular": Inter_500Regular,
+		"Inter-SemiBold": Inter_600SemiBold,
+	});
+
+	const onLayoutRootView = useCallback(async () => {
+		if (fontsLoaded || fontError) {
+			await SplashScreen.hideAsync();
+		}
+	}, [fontsLoaded, fontError]);
+
+	if (!fontsLoaded && !fontError) {
+		return null;
+	}
+
+	return (
+		<View style={{ flex: 1 }} onLayout={onLayoutRootView}>
+			<NavigationContainer>
+				<Stack.Navigator
+					initialRouteName="Login"
+					screenOptions={{ headerShown: false }}
+				>
+					<Stack.Screen name="Login" component={Login} />
+					<Stack.Screen name="Register" component={RegisterScreen} />
+				</Stack.Navigator>
+			</NavigationContainer>
+		</View>
+	);
+}
+
+-----------------------------------------------------------------------------------------------
+screens/Login.js
+
+import { useState } from "react";
+import {
+	Text,
+	View,
+	TextInput,
+	TouchableOpacity,
+	TouchableWithoutFeedback,
+	KeyboardAvoidingView,
+	Platform,
+	Keyboard,
+	ScrollView,
+	Image,
+} from "react-native";
+
+import { FontAwesome5 } from "@expo/vector-icons";
+import { globalStyles } from "../styles/GlobalStyles";
+import { loginStyles } from "../styles/LoginStyles";
+
+export default function LoginScreen({ navigation }) {
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
+
+	const handleLogin = () => {
+		console.log("Logowanie dla:", email);
+	};
+
+	return (
+		<View style={globalStyles.container}>
+			<KeyboardAvoidingView
+				behavior={Platform.OS === "ios" ? "padding" : undefined}
+				style={{ flex: 1 }}
+			>
+				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+					<ScrollView
+						contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
+						keyboardShouldPersistTaps="handled"
+						showsVerticalScrollIndicator={false}
+					>
+						<View style={globalStyles.innerContainer}>
+							<View style={{ alignItems: "center", marginBottom: 30 }}>
+								<Text style={loginStyles.title}>FurrFinder</Text>
+								<Text style={loginStyles.subtitle}>
+									Znajdź swojego przyjaciela
+								</Text>
+							</View>
+
+							<View style={loginStyles.mainPanel}>
+								<View style={globalStyles.inputContainer}>
+									<Text style={globalStyles.title}>Zaloguj się</Text>
+									<Text style={globalStyles.subtitle}>
+										Wpisz E-mail oraz hasło aby się zalogować
+									</Text>
+
+									<TextInput
+										placeholder="Email"
+										style={globalStyles.input}
+										value={email}
+										onChangeText={setEmail}
+										autoCapitalize="none"
+									/>
+									<TextInput
+										placeholder="Hasło"
+										style={globalStyles.input}
+										value={password}
+										onChangeText={setPassword}
+										secureTextEntry
+									/>
+								</View>
+
+								<TouchableOpacity
+									style={globalStyles.mainButton}
+									onPress={handleLogin}
+								>
+									<Text style={globalStyles.buttonText}>Zaloguj się</Text>
+								</TouchableOpacity>
+
+								<View style={loginStyles.dividerContainer}>
+									<View style={loginStyles.line} />
+									<Text style={loginStyles.dividerText}>albo</Text>
+									<View style={loginStyles.line} />
+								</View>
+
+								<TouchableOpacity
+									style={[
+										loginStyles.registerButton,
+										loginStyles.withShadow,
+										{ flexDirection: "row", gap: 10, justifyContent: "center" },
+									]}
+									onPress={() =>
+										navigation.navigate("Register", { role: "user" })
+									}
+								>
+									<Image
+										source={require("../assets/icons/user.png")}
+										style={loginStyles.icon}
+									/>
+									<Text style={loginStyles.registerText}>
+										Zarejestruj się jako szukający
+									</Text>
+								</TouchableOpacity>
+
+								<TouchableOpacity
+									style={[
+										loginStyles.registerButton,
+										{
+											flexDirection: "row",
+											gap: 10,
+											justifyContent: "center",
+											marginTop: 10,
+										},
+									]}
+									onPress={() =>
+										navigation.navigate("Register", { role: "shelter" })
+									}
+								>
+									<Image
+										source={require("../assets/icons/pet.png")}
+										style={loginStyles.icon}
+									/>
+									<Text style={loginStyles.registerText}>
+										Zarejestruj jako schronisko
+									</Text>
+								</TouchableOpacity>
+								<View style={loginStyles.footerContainer}>
+									<Text style={loginStyles.footerText}>
+										Kontynuując, akceptujesz nasz{" "}
+										<Text
+											style={loginStyles.linkText}
+											onPress={() => console.log("Otwórz Regulamin")}
+										>
+											Regulamin
+										</Text>{" "}
+										oraz{" "}
+										<Text
+											style={loginStyles.linkText}
+											onPress={() => console.log("Otwórz Politykę")}
+										>
+											Politykę Prywatności
+										</Text>
+										.
+									</Text>
+								</View>
+							</View>
+						</View>
+					</ScrollView>
+				</TouchableWithoutFeedback>
+			</KeyboardAvoidingView>
+		</View>
+	);
+}
+
+-------------------------------------------------------------------------------------------------------
+
+styles/GlobalStyles.js
+
+import { StyleSheet } from "react-native";
+import Colors from "../constants/Colors";
+
+export const globalStyles = StyleSheet.create({
+	container: {
+		flex: 1,
+		backgroundColor: Colors.white,
+	},
+	innerContainer: {
+		flex: 1,
+		justifyContent: "space-between",
+		padding: 38,
+	},
+	title: {
+		paddingBottom: 3,
+		textAlign: "center",
+		fontSize: 16,
+		fontFamily: "Inter-SemiBold",
+	},
+	subtitle: {
+		marginBottom: 15,
+		textAlign: "center",
+		fontSize: 14,
+		fontFamily: "Inter-Regular",
+	},
+	input: {
+		height: 40,
+		paddingHorizontal: 16,
+		paddingVertical: 8,
+		borderRadius: 8,
+		marginBottom: 16,
+		fontFamily: "Inter-Regular",
+		fontSize: 14,
+		color: Colors.gray,
+		borderWidth: 1,
+		borderColor: "#E0E0E0",
+	},
+	mainButton: {
+		height: 40,
+		backgroundColor: Colors.black,
+		borderRadius: 8,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	buttonText: {
+		color: Colors.white,
+		fontFamily: "Inter-BolderRegular",
+		fontSize: 14,
+	},
+});
+
+
+---------------------------------------------------------------------------------------------
+
+styles/LoginStyles.js
+
+import { StyleSheet } from "react-native";
+import Colors from "../constants/Colors";
+
+export const loginStyles = StyleSheet.create({
+	title: {
+		marginTop: 132,
+		textAlign: "center",
+		fontSize: 36,
+		fontFamily: "Inter-SemiBold",
+		color: Colors.black,
+	},
+	subtitle: {
+		textAlign: "center",
+		fontSize: 14,
+		fontFamily: "Inter-Regular",
+		color: Colors.black,
+		opacity: 0.9,
+	},
+
+	mainPanel: {
+		paddingBottom: 97,
+	},
+
+	inputContainer: {
+		width: "100%",
+		marginTop: 24,
+		marginBottom: 20,
+	},
+	dividerContainer: {
+		flexDirection: "row",
+		alignItems: "center",
+		marginVertical: 24,
+		width: "100%",
+	},
+	line: {
+		flex: 1,
+		height: 1,
+		backgroundColor: "#E6E6E6",
+	},
+	dividerText: {
+		marginHorizontal: 10,
+		color: Colors.gray,
+		fontFamily: "Inter-Regular",
+		fontSize: 14,
+	},
+	registerButton: {
+		height: 40,
+		backgroundColor: "#EEEEEE",
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "center",
+		gap: 8,
+		borderRadius: 12,
+		marginBottom: 8,
+		width: "100%",
+	},
+	withShadow: {
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 4,
+		},
+		shadowOpacity: 0.25,
+		shadowRadius: 4,
+		elevation: 8,
+	},
+	registerText: {
+		textAlign: "center",
+		fontFamily: "Inter-BolderRegular",
+		fontSize: 14,
+		color: Colors.black,
+	},
+
+	icon: {
+		width: 20,
+		height: 20,
+	},
+	footerContainer: {
+		marginTop: 24,
+		paddingHorizontal: 10,
+	},
+	footerText: {
+		fontSize: 12,
+		textAlign: "center",
+		color: Colors.gray,
+		fontFamily: "Inter-Regular",
+	},
+	linkText: {
+		color: "#000",
+		fontFamily: "Inter-Regular",
+	},
+});
+
+---------------------------------------------------------------------------------------------
+
+constans/Colors.js
+
+export default {
+	white: "#FFFFFF",
+	black: "#000000",
+	gray: "#828282",
+};
+
+

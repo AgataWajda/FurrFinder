@@ -1,5 +1,4 @@
-// screens/RegisterScreen.js
-import React, { useState } from "react";
+import React from "react";
 import {
 	View,
 	Text,
@@ -7,88 +6,123 @@ import {
 	TouchableOpacity,
 	KeyboardAvoidingView,
 	Platform,
-	ScrollView,
+	TouchableWithoutFeedback,
+	Keyboard,
 } from "react-native";
-import { globalStyles } from "../styles/GlobalStyles";
-import { loginStyles } from "../styles/LoginStyles"; // Wykorzystamy wspólne style
 
-export default function RegisterScreen({ route }) {
+import { globalStyles } from "../styles/GlobalStyles";
+import { registerStyles } from "../styles/RegisterStyles";
+
+export default function RegisterScreen({ route, navigation }) {
 	const { role } = route.params;
 
 	return (
-		<KeyboardAvoidingView
-			behavior={Platform.OS === "ios" ? "padding" : "height"}
-			style={{ flex: 1, backgroundColor: "#fff" }}
-		>
-			<ScrollView contentContainerStyle={globalStyles.innerContainer}>
-				<Text style={loginStyles.logo}>FurrFinder</Text>
+		<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+			<View style={globalStyles.container}>
+				<KeyboardAvoidingView
+					behavior={Platform.OS === "ios" ? "padding" : "height"}
+					keyboardVerticalOffset={Platform.OS === "ios" ? 40 : 0}
+					style={[
+						globalStyles.innerContainer,
+						role === "shelter"
+							? registerStyles.shelterContainer
+							: registerStyles.userContainer,
+					]}
+				>
+					<TouchableOpacity
+						onPress={() => navigation.goBack()}
+					></TouchableOpacity>
 
-				<Text style={globalStyles.title}>Rejestracja</Text>
-				<Text style={loginStyles.subtitle}>
-					{role === "shelter" ? "Wpisz dane schroniska" : "Wpisz swoje dane"}
-				</Text>
-
-				<View style={{ width: "100%", marginTop: 20 }}>
-					{role === "shelter" && (
-						<>
+					<Text style={registerStyles.header}>FurrFinder</Text>
+					<View>
+						<View>
+							<Text
+								style={[
+									globalStyles.title,
+									role == "shelter"
+										? registerStyles.shelterTitle
+										: registerStyles.userTitle,
+								]}
+							>
+								Rejestracja
+							</Text>
+							<Text style={globalStyles.subtitle}>
+								{role === "shelter"
+									? "Wpisz dane schroniska"
+									: "Wpisz swoje dane"}
+							</Text>
+						</View>
+						<View>
+							{role === "shelter" ? (
+								<>
+									<TextInput
+										placeholder="Nazwa schroniska"
+										style={globalStyles.input}
+									/>
+									<TextInput
+										placeholder="Ulica i numer"
+										style={globalStyles.input}
+									/>
+									<TextInput placeholder="Miasto" style={globalStyles.input} />
+								</>
+							) : (
+								<>
+									<TextInput placeholder="Imię" style={globalStyles.input} />
+									<TextInput
+										placeholder="Nazwisko"
+										style={globalStyles.input}
+									/>
+								</>
+							)}
 							<TextInput
-								placeholder="Nazwa schroniska"
+								placeholder="Numer telefonu"
 								style={globalStyles.input}
-								placeholderTextColor="#999"
+								autoCapitalize="none"
+								keyboardType="phone"
 							/>
 							<TextInput
-								placeholder="Ulica"
+								placeholder="Email"
 								style={globalStyles.input}
-								placeholderTextColor="#999"
+								autoCapitalize="none"
+								keyboardType="email-address"
 							/>
 							<TextInput
-								placeholder="Miasto"
+								placeholder="Hasło"
 								style={globalStyles.input}
-								placeholderTextColor="#999"
+								secureTextEntry
 							/>
-						</>
-					)}
+						</View>
 
-					{role === "user" && (
-						<>
-							<TextInput
-								placeholder="Imię"
-								style={globalStyles.input}
-								placeholderTextColor="#999"
-							/>
-							<TextInput
-								placeholder="Nazwisko"
-								style={globalStyles.input}
-								placeholderTextColor="#999"
-							/>
-						</>
-					)}
-
-					{/* POLA WSPÓLNE */}
-					<TextInput
-						placeholder="Telefon"
-						style={globalStyles.input}
-						keyboardType="phone-pad"
-						placeholderTextColor="#999"
-					/>
-					<TextInput
-						placeholder="email@domena.com"
-						style={globalStyles.input}
-						autoCapitalize="none"
-						placeholderTextColor="#999"
-					/>
-					<TextInput
-						placeholder="Hasło"
-						style={globalStyles.input}
-						secureTextEntry
-						placeholderTextColor="#999"
-					/>
-				</View>
-
-				<TouchableOpacity style={globalStyles.mainButton}>
-					<Text style={globalStyles.buttonText}>Kontynuuj</Text>
-				</TouchableOpacity>
-			</ScrollView>
-		</KeyboardAvoidingView>
+						<TouchableOpacity
+							style={[globalStyles.mainButton, { marginTop: 20 }]}
+							onPress={() => {
+								/* Logika rejestracji */
+							}}
+						>
+							<Text style={globalStyles.buttonText}>Kontynuuj</Text>
+						</TouchableOpacity>
+						<View style={globalStyles.footerContainer}>
+							<Text style={globalStyles.footerText}>
+								Kontynuując, akceptujesz nasz{" "}
+								<Text
+									style={globalStyles.linkText}
+									onPress={() => console.log("Otwórz Regulamin")}
+								>
+									Regulamin
+								</Text>{" "}
+								oraz{" "}
+								<Text
+									style={globalStyles.linkText}
+									onPress={() => console.log("Otwórz Politykę")}
+								>
+									Politykę Prywatności
+								</Text>
+								.
+							</Text>
+						</View>
+					</View>
+				</KeyboardAvoidingView>
+			</View>
+		</TouchableWithoutFeedback>
 	);
 }
