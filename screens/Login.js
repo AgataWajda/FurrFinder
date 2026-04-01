@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
 	Text,
 	View,
@@ -10,17 +10,49 @@ import {
 	Keyboard,
 	ScrollView,
 	Image,
+	ActivityIndicator,
+	Alert,
 } from "react-native";
 
 import { globalStyles } from "../styles/GlobalStyles";
 import { loginStyles } from "../styles/LoginStyles";
+import { loginUser } from "../services/authService";
 
 export default function LoginScreen({ navigation }) {
-	const [email, setEmail] = useState("");
+	const [emailOrLogin, setEmailOrLogin] = useState("");
 	const [password, setPassword] = useState("");
+	const [loading, setLoading] = useState(false);
 
-	const handleLogin = () => {
-		console.log("Logowanie dla:", email);
+	const handleLogin = async () => {
+		if (!emailOrLogin.trim() || !password) {
+			Alert.alert("Błąd", "Wypełnij wszystkie pola.");
+			return;
+		}
+
+		setLoading(true);
+		try {
+			const result = await loginUser(emailOrLogin, password);
+
+			if (result.role === "shelter") {
+				navigation.replace("ShelterHome");
+			} else {
+				navigation.replace("UserHome");
+			}
+		} catch (error) {
+			console.error(error);
+			let msg = "Błąd logowania.";
+
+			if (error.message === "INVALID_FORMAT")
+				msg = "Zły format e-mail lub loginu (.schronisko).";
+			else if (error.code === "auth/invalid-credential")
+				msg = "Błędny login lub hasło.";
+			else if (error.message === "USER_NOT_FOUND_IN_DB")
+				msg = "Konto istnieje, ale brak danych w bazie Firestore.";
+
+			Alert.alert("Uwaga", msg);
+		} finally {
+			setLoading(false);
+		}
 	};
 
 	return (
@@ -47,15 +79,16 @@ export default function LoginScreen({ navigation }) {
 								<View style={globalStyles.inputContainer}>
 									<Text style={globalStyles.title}>Zaloguj się</Text>
 									<Text style={globalStyles.subtitle}>
-										Wpisz E-mail oraz hasło aby się zalogować
+										Wpisz E-mail lub login schroniska
 									</Text>
 
 									<TextInput
-										placeholder="Email"
+										placeholder="Email lub login"
 										style={globalStyles.input}
-										value={email}
-										onChangeText={setEmail}
+										value={emailOrLogin}
+										onChangeText={setEmailOrLogin}
 										autoCapitalize="none"
+										autoCorrect={false}
 									/>
 									<TextInput
 										placeholder="Hasło"
@@ -67,10 +100,15 @@ export default function LoginScreen({ navigation }) {
 								</View>
 
 								<TouchableOpacity
-									style={globalStyles.mainButton}
+									style={[globalStyles.mainButton, loading && { opacity: 0.7 }]}
 									onPress={handleLogin}
+									disabled={loading}
 								>
-									<Text style={globalStyles.buttonText}>Zaloguj się</Text>
+									{loading ? (
+										<ActivityIndicator color="#FFF" />
+									) : (
+										<Text style={globalStyles.buttonText}>Zaloguj się</Text>
+									)}
 								</TouchableOpacity>
 
 								<View style={loginStyles.dividerContainer}>
@@ -80,11 +118,7 @@ export default function LoginScreen({ navigation }) {
 								</View>
 
 								<TouchableOpacity
-									style={[
-										loginStyles.registerButton,
-										loginStyles.withShadow,
-										{ flexDirection: "row", gap: 10, justifyContent: "center" },
-									]}
+									style={[loginStyles.registerButton, loginStyles.withShadow]}
 									onPress={() =>
 										navigation.navigate("Register", { role: "user" })
 									}
@@ -99,15 +133,7 @@ export default function LoginScreen({ navigation }) {
 								</TouchableOpacity>
 
 								<TouchableOpacity
-									style={[
-										loginStyles.registerButton,
-										{
-											flexDirection: "row",
-											gap: 10,
-											justifyContent: "center",
-											marginTop: 10,
-										},
-									]}
+									style={[loginStyles.registerButton, { marginTop: 10 }]}
 									onPress={() =>
 										navigation.navigate("Register", { role: "shelter" })
 									}
@@ -120,25 +146,6 @@ export default function LoginScreen({ navigation }) {
 										Zarejestruj jako schronisko
 									</Text>
 								</TouchableOpacity>
-								<View style={globalStyles.footerContainer}>
-									<Text style={globalStyles.footerText}>
-										Kontynuując, akceptujesz nasz{" "}
-										<Text
-											style={globalStyles.linkText}
-											onPress={() => console.log("Otwórz Regulamin")}
-										>
-											Regulamin
-										</Text>{" "}
-										oraz{" "}
-										<Text
-											style={globalStyles.linkText}
-											onPress={() => console.log("Otwórz Politykę")}
-										>
-											Politykę Prywatności
-										</Text>
-										.
-									</Text>
-								</View>
 							</View>
 						</View>
 					</ScrollView>

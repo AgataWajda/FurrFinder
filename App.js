@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { View } from "react-native"; // Dodaliśmy View
+import { View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
@@ -9,8 +9,11 @@ import {
 	Inter_500Regular,
 	Inter_600SemiBold,
 } from "@expo-google-fonts/inter";
+
 import Login from "./screens/Login";
 import RegisterScreen from "./screens/Register";
+import UserHome from "./screens/UserHome";
+import ShelterHome from "./screens/ShelterHome";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,6 +45,8 @@ export default function App() {
 				>
 					<Stack.Screen name="Login" component={Login} />
 					<Stack.Screen name="Register" component={RegisterScreen} />
+					<Stack.Screen name="UserHome" component={UserHome} />
+					<Stack.Screen name="ShelterHome" component={ShelterHome} />
 				</Stack.Navigator>
 			</NavigationContainer>
 		</View>
