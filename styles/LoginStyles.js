@@ -2,6 +2,10 @@ import { StyleSheet } from "react-native";
 import Colors from "../constants/Colors";
 
 export const loginStyles = StyleSheet.create({
+	titleContainer: {
+		alignItems: "center",
+		marginBottom: 30,
+	},
 	title: {
 		marginTop: 132,
 		textAlign: "center",
@@ -52,6 +56,7 @@ export const loginStyles = StyleSheet.create({
 		gap: 8,
 		borderRadius: 12,
 		marginBottom: 8,
+		marginTop: 10,
 		width: "100%",
 	},
 	withShadow: {
@@ -74,5 +79,9 @@ export const loginStyles = StyleSheet.create({
 	icon: {
 		width: 20,
 		height: 20,
+	},
+
+	loader: {
+		color: Colors.white,
 	},
 });

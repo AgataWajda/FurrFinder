@@ -14,9 +14,10 @@ import {
 	Alert,
 } from "react-native";
 
+import { loginUser } from "../services/authService";
+
 import { globalStyles } from "../styles/GlobalStyles";
 import { loginStyles } from "../styles/LoginStyles";
-import { loginUser } from "../services/authService";
 
 export default function LoginScreen({ navigation }) {
 	const [emailOrLogin, setEmailOrLogin] = useState("");
@@ -24,32 +25,25 @@ export default function LoginScreen({ navigation }) {
 	const [loading, setLoading] = useState(false);
 
 	const handleLogin = async () => {
-		if (!emailOrLogin.trim() || !password) {
-			Alert.alert("Błąd", "Wypełnij wszystkie pola.");
+		if (!emailOrLogin || !password) {
+			Alert.alert("Błąd", "Proszę uzupełnić adres email i hasło.");
 			return;
 		}
 
-		setLoading(true);
 		try {
-			const result = await loginUser(emailOrLogin, password);
+			setLoading(true);
+			const user = await loginUser(emailOrLogin, password);
 
-			if (result.role === "shelter") {
-				navigation.replace("ShelterHome");
-			} else {
-				navigation.replace("UserHome");
+			if (user.role === "user") {
+				console.log("Zalogowano jako Użytkownik");
+				navigation.replace("UserHome", { userId: user.uid });
+			} else if (user.role === "shelter") {
+				console.log("Zalogowano jako Schronisko");
+				navigation.replace("ShelterHome", { userId: user.uid });
 			}
 		} catch (error) {
+			Alert.alert("Błąd logowania", error.message || "Serwer nie odpowiada.");
 			console.error(error);
-			let msg = "Błąd logowania.";
-
-			if (error.message === "INVALID_FORMAT")
-				msg = "Zły format e-mail lub loginu (.schronisko).";
-			else if (error.code === "auth/invalid-credential")
-				msg = "Błędny login lub hasło.";
-			else if (error.message === "USER_NOT_FOUND_IN_DB")
-				msg = "Konto istnieje, ale brak danych w bazie Firestore.";
-
-			Alert.alert("Uwaga", msg);
 		} finally {
 			setLoading(false);
 		}
@@ -68,7 +62,7 @@ export default function LoginScreen({ navigation }) {
 						showsVerticalScrollIndicator={false}
 					>
 						<View style={globalStyles.innerContainer}>
-							<View style={{ alignItems: "center", marginBottom: 30 }}>
+							<View style={loginStyles.titleContainer}>
 								<Text style={loginStyles.title}>FurrFinder</Text>
 								<Text style={loginStyles.subtitle}>
 									Znajdź swojego przyjaciela
@@ -100,12 +94,12 @@ export default function LoginScreen({ navigation }) {
 								</View>
 
 								<TouchableOpacity
-									style={[globalStyles.mainButton, loading && { opacity: 0.7 }]}
+									style={globalStyles.mainButton}
 									onPress={handleLogin}
 									disabled={loading}
 								>
 									{loading ? (
-										<ActivityIndicator color="#FFF" />
+										<ActivityIndicator style={loginStyles.loader} />
 									) : (
 										<Text style={globalStyles.buttonText}>Zaloguj się</Text>
 									)}
@@ -133,7 +127,7 @@ export default function LoginScreen({ navigation }) {
 								</TouchableOpacity>
 
 								<TouchableOpacity
-									style={[loginStyles.registerButton, { marginTop: 10 }]}
+									style={loginStyles.registerButton}
 									onPress={() =>
 										navigation.navigate("Register", { role: "shelter" })
 									}

@@ -1,30 +1,27 @@
-import { auth, db } from "../firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
-
 export const loginUser = async (emailOrLogin, password) => {
-	let finalEmail = "";
+	try {
+		const response = await fetch(
+			`${process.env.EXPO_PUBLIC_API_URL}/api/login`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					Accept: "application/json",
+				},
+				body: JSON.stringify({
+					email: emailOrLogin.trim(),
+					password: password,
+				}),
+			},
+		);
 
-	if (emailOrLogin.includes("@")) {
-		finalEmail = emailOrLogin.trim();
-	} else if (emailOrLogin.toLowerCase().includes(".schronisko")) {
-		finalEmail = `${emailOrLogin.trim()}@furrfinder.app`;
-	} else {
-		throw new Error("INVALID_FORMAT");
+		const data = await response.json();
+
+		if (!response.ok || !data.success) {
+			throw new Error(data.error || "Błąd logowania.");
+		}
+		return data.user;
+	} catch (error) {
+		throw error;
 	}
-
-	const userCredential = await signInWithEmailAndPassword(
-		auth,
-		finalEmail,
-		password,
-	);
-	const uid = userCredential.user.uid;
-
-	const shelterDoc = await getDoc(doc(db, "shelters", uid));
-	if (shelterDoc.exists()) return { uid, role: "shelter" };
-
-	const userDoc = await getDoc(doc(db, "users", uid));
-	if (userDoc.exists()) return { uid, role: "user" };
-
-	throw new Error("USER_NOT_FOUND_IN_DB");
 };
