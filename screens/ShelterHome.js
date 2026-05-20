@@ -1,6 +1,4 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { auth, db } from "../firebaseConfig";
-import { doc, getDoc } from "firebase/firestore";
 import { globalStyles } from "../styles/GlobalStyles";
 import { loginStyles } from "../styles/LoginStyles";
 import { useState, useEffect } from "react";

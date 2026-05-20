@@ -67,23 +67,7 @@ export default function UserHome({ route }) {
 
 	return (
 		<View style={globalStyles.container}>
-			<View style={userHomeStyles.headerContainer}>
-				<TouchableOpacity>
-					<Image
-						source={require("../assets/icons/menu.png")}
-						style={userHomeStyles.icon}
-					/>
-				</TouchableOpacity>
-				<Text style={userHomeStyles.title}>FurrFinder</Text>
-				<TouchableOpacity>
-					<Image
-						source={require("../assets/icons/user.png")}
-						style={userHomeStyles.icon}
-					/>
-				</TouchableOpacity>
-			</View>
-
-			<View style={{ flex: 1, marginTop: -40 }}>
+			<View style={{ flex: 1, marginBottom: 90 }}>
 				{animals.length > 0 ? (
 					<Swiper
 						cards={animals}

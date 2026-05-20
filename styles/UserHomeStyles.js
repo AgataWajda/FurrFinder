@@ -3,13 +3,11 @@ import Colors from "../constants/Colors";
 
 export const userHomeStyles = StyleSheet.create({
 	headerContainer: {
-		marginTop: 50,
+		paddingTop: 90,
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center",
 		paddingHorizontal: 20,
-		paddingTop: Platform.OS === "ios" ? 50 : 20,
-		height: 100,
 		backgroundColor: Colors.white,
 	},
 	title: {

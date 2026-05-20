@@ -15,6 +15,7 @@ import Login from "./screens/Login";
 import RegisterScreen from "./screens/Register";
 import UserHome from "./screens/UserHome";
 import ShelterHome from "./screens/ShelterHome";
+import UserLayout from "./navigation/UserLayout";
 
 const Stack = createNativeStackNavigator();
 
@@ -46,7 +47,7 @@ export default function App() {
 				>
 					<Stack.Screen name="Login" component={Login} />
 					<Stack.Screen name="Register" component={RegisterScreen} />
-					<Stack.Screen name="UserHome" component={UserHome} />
+					<Stack.Screen name="UserHome" component={UserLayout} />
 					<Stack.Screen name="ShelterHome" component={ShelterHome} />
 				</Stack.Navigator>
 			</NavigationContainer>
