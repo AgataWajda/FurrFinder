@@ -47,7 +47,11 @@ export default function UserTabNavigator({ route }) {
 				component={UserHome}
 				initialParams={{ userId }}
 			/>
-			<Tab.Screen name="Polubione" component={LikedAnimalsScreen} />
+			<Tab.Screen
+				name="Polubione"
+				component={LikedAnimalsScreen}
+				initialParams={{ userId }}
+			/>
 			<Tab.Screen name="Filtruj" component={FilterAnimalsScreen} />
 		</Tab.Navigator>
 	);

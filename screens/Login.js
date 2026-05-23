@@ -54,8 +54,13 @@ export default function LoginScreen({ navigation }) {
 			<KeyboardAvoidingView
 				behavior={Platform.OS === "ios" ? "padding" : undefined}
 				style={{ flex: 1 }}
+				// POPRAWKA WEB 1: Kontener przepuszcza zdarzenia myszy do głębszych warstw w przeglądarce
+				pointerEvents={Platform.OS === "web" ? "box-none" : "auto"}
 			>
-				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+				{/* POPRAWKA WEB 2: Blokujemy chowanie klawiatury na kliknięcie tła tylko dla platformy Web */}
+				<TouchableWithoutFeedback
+					onPress={Platform.OS === "web" ? undefined : Keyboard.dismiss}
+				>
 					<ScrollView
 						contentContainerStyle={{ flexGrow: 1, justifyContent: "center" }}
 						keyboardShouldPersistTaps="handled"
@@ -90,6 +95,8 @@ export default function LoginScreen({ navigation }) {
 										value={password}
 										onChangeText={setPassword}
 										secureTextEntry
+										// Opcjonalne zabezpieczenie dla autouzupełniania przeglądarek
+										autoComplete={Platform.OS === "web" ? "off" : "password"}
 									/>
 								</View>
 

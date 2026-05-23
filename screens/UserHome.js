@@ -7,7 +7,10 @@ import {
 	ActivityIndicator,
 } from "react-native";
 import Swiper from "react-native-deck-swiper";
-import { fetchAvailableAnimals } from "../services/animalService";
+import {
+	fetchAvailableAnimals,
+	saveSwipeAction,
+} from "../services/animalService";
 import { globalStyles } from "../styles/GlobalStyles";
 import { userHomeStyles } from "../styles/UserHomeStyles";
 import { styles } from "../styles/UserHomeCardStyles";
@@ -57,6 +60,22 @@ export default function UserHome({ route }) {
 		}
 	};
 
+	const handleLike = async (index) => {
+		const swipedAnimal = animals[index];
+		if (!swipedAnimal || !userId) return;
+
+		try {
+			console.log(
+				`Wysyłanie LIKE dla zwierzaka: ${swipedAnimal.name} (ID: ${swipedAnimal.id})`,
+			);
+			// Wywołujemy serwis, przekazując userId użytkownika oraz id zwierzaka
+			await saveSwipeAction(userId, swipedAnimal.id, "LIKE");
+		} catch (err) {
+			// Logujemy błąd, ale nie przerywamy działania aplikacji (użytkownik swajpuje dalej)
+			console.error("Błąd podczas zapisywania polubienia:", err);
+		}
+	};
+
 	if (loading) {
 		return (
 			<View style={[globalStyles.container, { justifyContent: "center" }]}>
@@ -86,7 +105,7 @@ export default function UserHome({ route }) {
 							</View>
 						)}
 						onSwiped={(index) => handleSwiped(index)}
-						onSwipedRight={(index) => console.log("Match!", animals[index].id)}
+						onSwipedRight={(index) => handleLike(index)}
 						stackSize={3}
 						cardIndex={0}
 						backgroundColor={"transparent"}
